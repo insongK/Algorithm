@@ -3,7 +3,7 @@ def bst(start, end, enemy, k, n):
         return start
 
     mid = (start + end + 1) // 2
-    li = sorted(enemy[:mid], reverse=True)  # 전체가 아니라 처음 mid 라운드까지만
+    li = sorted(enemy[:mid], reverse=True)
     li[:k] = [0] * k
 
     if sum(li) <= n:
@@ -17,4 +17,3 @@ def solution(n, k, enemy):
         return len(enemy)
 
     return bst(0, len(enemy), enemy, k, n)
-    mid = len(enemy)//2

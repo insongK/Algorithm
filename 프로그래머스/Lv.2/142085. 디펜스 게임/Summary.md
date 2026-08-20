@@ -2,29 +2,29 @@
 
 ## 💡 접근 방식
 
-이진 탐색을 활용하여 특정 라운드까지의 적을 무찌르는지 판별. 각 라운드 전투력을 정렬하여 합계를 계산.
+이진 탐색을 통해 방어할 수 있는 최대 적의 수를 찾음. 전투에서 소모되는 자원 k를 고려하여 자원이 부족할 경우의 판단.
 
 ## ⏱️ 시간 복잡도
 
-O(N log N) — N은 enemy의 길이. 이진 탐색에서 매 라운드마다 최대 O(N log N)의 정렬 작업 발생. 하지만 k가 상대적으로 작은 경우는 효율적이므로 개선 필요.
+O(N log N) — 각 이진 탐색 단계에서 O(N)으로 적의 힘을 계산, 총 log N회의 재귀 호출로 N log N.
 
 ## 📦 공간 복잡도
 
-O(N) — 적의 리스트에 대한 별도의 가공 작업으로 인한 공간 사용. 소요되지 않은 공간을 줄일 방법이 있음.
+O(N) — sorted()로 정렬된 리스트를 생성하므로 입력 크기에 따라 추가 메모리 소모.
 
 ## 🔧 개선 사항
 
-1) bst 함수에서 sorted() 대신 힙 구조를 사용하여 적의 방어력을 더 효율적으로 관리
-2) k만큼 최상위 적을 0처리할 필요 없이 필요 시 배열에서 제거
-3) 중복 코드 제거 및 가독성을 위해 변수명을 명확하게 개선
+1) 이진 탐색 내 정렬을 피하기 위해 max-heap 사용: 최대 적의 힘을 효율적으로 추출.
+2) k와 n을 고려하여 방어 능력 확인을 보다 직관적으로 처리.
+예시: heapq 모듈 사용, n과 k 비교하여 방어 여부 쉽게 결정할 수 있도록 개선.
 
 ## 🎯 다음 추천 문제
 
-프로그래머스 12985번 - 예상 대진표 | 같은 구조의 전투를 다루며, 승패 로직을 중점적으로 연습하는 문제.
+프로그래머스 12985번 - 불량 사용자 | 이진 탐색 및 최적화 문제 해결의 기초로 적합.
 
 ## 🏷️ 태그
 
-binary-search, greedy
+greedy, binary-search
 
 ## ✨ 모범 답안
 
@@ -34,18 +34,15 @@ import heapq
 def solution(n, k, enemy):
     if k >= len(enemy):
         return len(enemy)
-    
-    left, right = 0, len(enemy)
-    while left < right:
-        mid = (left + right + 1) // 2
-        total_enemy = enemy[:mid]
-        if len(total_enemy) > k:
-            largest_enemies = heapq.nlargest(k, total_enemy)
-            if sum(total_enemy) - sum(largest_enemies) <= n:
-                left = mid  # 더 많은 라운드를 진행 가능
-            else:
-                right = mid - 1  # 더 적은 라운드 필요
-        else:
-            left = mid
-    return left
+
+    max_heap = []
+    defeated = 0
+
+    for i, e in enumerate(enemy):
+        heapq.heappush(max_heap, e)
+        if len(max_heap) > k:
+            heapq.heappop(max_heap)
+        if sum(max_heap) > n:
+            return i
+    return len(enemy)
 ```
