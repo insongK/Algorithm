@@ -8,7 +8,7 @@ SWEA
 
 ### 분류
 
-math, implementation
+implementation
 
 ### 언어
 
@@ -16,5 +16,5 @@ java
 
 ### 제출 일자
 
-2026-08-25 06:47:47
+2026-08-25 06:51:49
 
